@@ -1,0 +1,20 @@
+{
+    "name": "abraham/using-flutterwave-php-v3",
+    "description": "a basic project that makes use of the PHP SDK",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Abraham\\UsingFlutterwavePhpV3\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "abraham",
+            "email": "abraham@flutterwavego.com"
+        }
+    ],
+    "require": {
+        "flutterwavedev/flutterwave-v3": "dev-dev"
+    }
+}

@@ -1,0 +1,9 @@
+# BILL SERVICE TASK
+1. Deprecate the `getCategories` method for developers to use the new `getBillCategories` method.
+2. Create the New `getBillCategories` method to retrieve the categories of bills that can be paid for with the `/top-bill-categories` endpoint.
+2. Create New `getBillerItems` method to retrieve items under a specific biller. 
+3. Deprecate the `validateService` method for developers to now use `validateCustomerInfo` with the code and customer parmater as required.
+4. Fix The `createPayment` method error and issue.
+
+# MOMO SERVICE
+1. UPDATE THE ALLOWED CURRENCIES LIST. INTRODUCE XOF and XAF and any other missing currencies.
