@@ -103,14 +103,14 @@ use Flutterwave\Service\PayoutSubaccount;
 ## Checkout implementation
 // Flutterwave::bootstrap();
 
-// $transaction = new \Flutterwave\Service\Transactions(
-//     PackageConfig::setUp(
-//         $_ENV['FLW_SECRET_KEY'],
-//         $_ENV['FLW_PUBLIC_KEY'],
-//         $_ENV['FLW_ENCRYPTION_KEY'],
-//         $_ENV['FLW_ENV']
-//     )
-// );
+$transaction = new \Flutterwave\Service\Transactions(
+    PackageConfig::setUp( # use package config with composer.
+        $_ENV['FLW_SECRET_KEY'],
+        $_ENV['FLW_PUBLIC_KEY'],
+        $_ENV['FLW_ENCRYPTION_KEY'],
+        $_ENV['FLW_ENV']
+    )
+);
 
-// $response = $transaction->verifyWithTxref('UNIQUE_TRANSACTION_REFERENCE');
-// print_r($response);
+$response = $transaction->verifyWithTxref('UNIQUE_TRANSACTION_REFERENCE');
+print_r($response);
