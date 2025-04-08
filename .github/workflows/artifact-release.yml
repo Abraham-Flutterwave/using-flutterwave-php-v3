@@ -1,81 +1,56 @@
 name: Create Release
 
-permissions:
-  contents: write  # Needed to create and update GitHub releases
-
 on:
   push:
     tags:
-      - 'v*'  # Trigger on version tags like v1.0.0
+      - 'v*'  # Trigger on new version tags like v1.0.0
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.3'
-        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
 
-    - name: Install dependencies
-      run: |
-        composer install --no-dev --optimize-autoloader
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader
 
-    - name: Create artifact
-      run: |
-        mkdir -p artifact
-        cp -r vendor artifact/
-        cp -r public artifact/
-        cp -r logs artifact/
-        cp composer.json artifact/
-        cp .gitignore artifact/
-        cp .env.example artifact/
+      - name: Create release artifact
+        run: |
+          mkdir -p build
+          cp -r vendor public logs composer.json .gitignore .env.example build/
+          cd build && zip -r ../testing-flw-php.zip . && cd ..
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: flw-test
-        path: artifact
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flw-test
+          path: testing-flw-php.zip
 
   release:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: flw-test
-        path: artifact
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: flw-test
+          path: .
 
-    - name: Zip the artifact
-      run: |
-        cd artifact
-        zip -r ../testing-flw-php.zip .
-
-    - name: Create release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: testing-flw-php.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Strip upload URL
-      id: clean_url
-      run: echo "UPLOAD_URL=${{ steps.create_release.outputs.upload_url }}" | sed 's/{.*}//' >> $GITHUB_ENV
-
-    - name: Create release and upload asset
-      uses: softprops/action-gh-release@v1
-      with:
-        files: testing-flw-php.zip  # Path to the ZIP file you want to upload
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}s
+      - name: Create GitHub Release and upload asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: testing-flw-php.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
