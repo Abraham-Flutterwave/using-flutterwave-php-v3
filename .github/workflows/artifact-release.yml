@@ -73,12 +73,9 @@ jobs:
       id: clean_url
       run: echo "UPLOAD_URL=${{ steps.create_release.outputs.upload_url }}" | sed 's/{.*}//' >> $GITHUB_ENV
 
-    - name: Upload release asset (optional)
-      uses: actions/upload-release-asset@v1
+    - name: Create release and upload asset
+      uses: softprops/action-gh-release@v1
       with:
-        upload_url: ${{ env.UPLOAD_URL }}
-        asset_path: testing-flw-php.zip
-        asset_name: testing-flw-php.zip
-        asset_content_type: application/zip
+        files: testing-flw-php.zip  # Path to the ZIP file you want to upload
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}s
